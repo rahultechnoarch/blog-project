@@ -15,6 +15,17 @@
     <hr />
   </article>
 </div>
+
+<!--Like Button-->
+<div class="container">
+    <form action="/likepost" method="POST">
+      {% csrf_token %}
+    <span>{{post.likes}} Likes</span>
+    <button type="submit", name="like", value="like", class="btn btn-primary btn-sm"> Like</button>
+  </form>
+</div>
+<!--Like Button-->
+
 <div class="container">
   <h2>Comments ({{comments.count}}):</h2>
   <div class="my-2">

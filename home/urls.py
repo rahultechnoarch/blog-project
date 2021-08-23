@@ -1,5 +1,6 @@
 from django.urls import path, include
 from home import views
+from django.conf.urls import url
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -9,6 +10,6 @@ urlpatterns = [
     path('signup', views.signuphandle, name='signuphandle'),
     path('login', views.loginhandle, name='loginhandle'),
     path('logout', views.logouthandle, name='logouthandle'),
-    #path('changepassword', views.changepassword, name='changepassword'),
+    path('changepassword', views.changepassword, name='changepassword'),
 
 ]

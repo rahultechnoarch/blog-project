@@ -54,7 +54,7 @@
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
               <li><a class="dropdown-item" href="/logout">Logout</a></li>
-              <li><a class="dropdown-item" href="/changepassword">Change Password</a></li>
+              <li><a class="dropdown-item" href="/changepassword" role="button">Change Password</a></li>
             </ul>
           </li>
         </ul>
@@ -163,42 +163,6 @@
     </div>
   </div>
 
-  <!--change password modal -->
-  <!--
-  <div class="modal fade" id="changepasswordModal" tabindex="-1" aria-labelledby="changepasswordModal" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="changepasswordModalTitle">Change Password</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form action='/changepassword' method='post'>
-            {% csrf_token %}
-            <div class="mb-3">
-              <label for="changepasswordusername" class="form-label">User Name</label>
-              <input type="text" class="form-control" name="changepasswordusername" id="changepasswordusername"
-                aria-describedby="changepasswordusername" placeholder="Enter your Username" required>
-            </div>
-            <div class="mb-3">
-              <label for="changepassword1" class="form-label">Enter New Password</label>
-              <input name="changepassword1" type="password" class="form-control" id="changepassword1"
-                placeholder="Enter new password" required>
-            </div>
-            <div class="mb-3">
-              <label for="changepassword2" class="form-label">Confirm New Password</label>
-              <input name="changepassword2" type="password" class="form-control" id="changepassword2"
-                placeholder="Confirm your password" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Confirm</button>
-          </form>
-        </div>
-        <div class="modal-footer">
-        </div>
-      </div>
-    </div>
-  </div>
-  -->
   {% block body %} {% endblock body %}
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"

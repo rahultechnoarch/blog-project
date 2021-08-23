@@ -1,7 +1,7 @@
 from django.db import models
 
 # Create your models here.
-#Model for contact
+# Contact model for the user.
 class Contact(models.Model):
     sno = models.AutoField(primary_key=True)
     name = models.CharField(max_length=60)

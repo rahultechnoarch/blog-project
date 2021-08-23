@@ -1,10 +1,10 @@
-from django.contrib import auth
 from django.shortcuts import render, HttpResponse, redirect
 from home.models import Contact
 from blog.models import Post
 from django.contrib import messages
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import login, logout, authenticate, update_session_auth_hash
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import PasswordChangeForm
 # Create your views here.
 #HTML pages
 def home(request):
@@ -13,6 +13,7 @@ def home(request):
 def about(request):
     return render(request, 'home/about.html')
 
+#contact form ref
 def contact(request):
     if request.method=='POST':
         #get all contact form parameters
@@ -30,6 +31,7 @@ def contact(request):
             messages.success(request, "Your message has been sent.")
     return render(request, 'home/contact.html')
 
+# search ref using title, content
 def search(request):
     searchquery = request.GET['searchquery']
     if len(searchquery)>50:
@@ -98,4 +100,16 @@ def logouthandle(request):
     messages.success(request, "You've logged out")
     return redirect('home')
 
-#def changepassword(request):
+def changepassword(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            messages.success(request, 'Your password was successfully updated')
+            return redirect('home')
+        else:
+            messages.error(request, 'Please Enter correct details')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'home/changepassword.html', {'form': form})

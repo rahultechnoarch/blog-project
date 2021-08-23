@@ -2,21 +2,22 @@ from typing import ContextManager
 from django.shortcuts import redirect, render, HttpResponse
 from blog.models import Post, BlogComment
 from django.contrib import messages
-from blog.templatetags import extras
 # Create your views here.
+# homepage ref
 def blogHome(request):
     allPosts = Post.objects.all()
     context = {'allPosts': allPosts}
     return render(request, 'blog/blogHome.html', context)
 
+# post ref
 def blogPost(request, slug):
     post = Post.objects.filter(slug=slug).first()
-    #for couting post views
+    # for couting post views
     post.views = post.views + 1
     post.save()
 
     comments = BlogComment.objects.filter(post=post, parent=None)
-    #reply api (confusing)
+    # reply api
     replies = BlogComment.objects.filter(post=post).exclude(parent=None)
     replyDict = {}
     for reply in replies:
@@ -28,6 +29,7 @@ def blogPost(request, slug):
     context = {'post': post, 'comments': comments, 'user': request.user, 'replyDict': replyDict}
     return render(request, 'blog/blogPost.html', context)
 
+# comment post ref
 def postComment(request):
     if request.method == "POST":
         comment = request.POST.get("comment")
