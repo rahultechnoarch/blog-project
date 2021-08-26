@@ -1,10 +1,11 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models import constraints
 from django.db.models.deletion import CASCADE
-from django.contrib.auth.models import User
 from django.utils.timezone import now
 from django.db.models.fields.related import ForeignKey
 from ckeditor.fields import RichTextField
+from django.db.models import UniqueConstraint
 # Create your models here.
 
 # Post model, creates a post with title, content, author, time (view count and slug)
@@ -31,3 +32,17 @@ class BlogComment(models.Model):
 
     def __str__(self):
         return self.comment[0:13] + ".. By: " + self.user.username
+
+# like model
+'''class Like(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name='likes')
+    post_id = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='likes')
+
+    class Meta:
+        constraints = [
+            UniqueConstraint(fields=['user_id', 'post_id'], name='blog_likes')
+        ]
+
+    def __str__(self):
+        return f'{self.user_id.username} --> {self.post_id.title}'
+'''

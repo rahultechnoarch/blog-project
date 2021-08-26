@@ -1,7 +1,10 @@
 from typing import ContextManager
-from django.shortcuts import redirect, render, HttpResponse
+from django.shortcuts import redirect, render, HttpResponse, get_object_or_404
 from blog.models import Post, BlogComment
 from django.contrib import messages
+from django.urls import reverse_lazy, reverse
+from django.http import JsonResponse
+
 # Create your views here.
 # homepage ref
 def blogHome(request):
@@ -49,3 +52,26 @@ def postComment(request):
             messages.success(request, "Reply posted successfully")
 
     return redirect(f"/blog/{post.slug}")
+
+'''
+def like(request):
+    post_id = request.POST['post_id']
+    post = Post.objects.get(pk=post_id)
+    liked = True
+
+    like_object, created = Like.objects.get_or_create(user_id = request.user, post_id = post)
+    if not created:
+        like_object.delete() # the user already liked this picture before
+        liked = False
+    
+    return JsonResponse({'liked':liked}) 
+
+def posts(request):
+    posts = Post.objects.all()
+    liked_posts = []
+    
+    for liked_post in request.user.likes.all(): # likes is the related name used in models
+        liked_posts.append(liked_post.post_id)
+
+    return render(request, 'home.html', {'posts':posts, 'liked_posts':liked_posts})
+''' 

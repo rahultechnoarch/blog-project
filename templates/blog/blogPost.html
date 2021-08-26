@@ -3,6 +3,7 @@
 {% block body %}
 {% load humanize %}
 {% load extras %}
+{% load static %}
 <div class="container my-3">
   <article class="blog-post">
     <h2 class="blog-post-title">{{post.title}}</h2>
@@ -18,10 +19,11 @@
 
 <!--Like Button-->
 <div class="container">
-    <form action="/likepost" method="POST">
+    <form action="" method="POST">
       {% csrf_token %}
-    <span>{{post.likes}} Likes</span>
     <button type="submit", name="like", value="like", class="btn btn-primary btn-sm"> Like</button>
+    <br>
+    <span>Likes</span>
   </form>
 </div>
 <!--Like Button-->
@@ -33,7 +35,7 @@
     <form action="/blog/postComment" method="post">
     {% csrf_token %}
     <div class="form-group mb-3">
-      <input type="text" class="form-control" name="comment" id="comment" placeholder="Write your comment here" />
+      <textarea class="form-control" name="comment" placeholder="Write your comment here" cols="10" rows="3"></textarea>
     </div>
     <input type="hidden" name="postSno" id="postSno" value="{{post.sno}}" />
     <input type="hidden" name="parentSno" id="parentSno" value="" />
@@ -60,7 +62,7 @@
               <form action="/blog/postComment" method="post">
                 {% csrf_token %}
               <div class="form-group mb-3">
-                <input type="text" class="form-control" name="comment" id="comment" placeholder="Reply here" />
+                <textarea class="form-control" name="comment" placeholder="Reply here" cols="10" rows="3"></textarea>
                 <input type="hidden" name="parentSno" id="parentSno" value="{{comment.sno}}" />
               </div>
               <input type="hidden" name="postSno" id="postSno" value="{{post.sno}}" />
