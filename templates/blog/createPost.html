@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% load crispy_forms_tags %}
+{% block title %} Form {% endblock title %}
+
+{% block body %}
+    <!--Body STARTS HERE-->
+    <h4 class="text-center"> Create Post </h4>
+
+    <!--Use this without crispy forms helper-->
+    <!--
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <input type="submit">
+    </form>
+    -->
+
+<style>
+  body {padding: 20px;}
+</style>
+
+    {% crispy form form.helper%}
+
+{% endblock body %}

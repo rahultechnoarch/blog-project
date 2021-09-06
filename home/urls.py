@@ -1,14 +1,22 @@
-from django.urls import path, include
+from django.urls import path
 from home import views
+from django.conf.urls import url
+from django.views.generic import TemplateView
 
 urlpatterns = [
-    path('', views.home, name='home'),
-    path('about', views.about, name='about'),
-    path('contact', views.contact, name='contact'),
-    path('search', views.search, name='search'),
-    path('signup', views.signuphandle, name='signuphandle'),
-    path('login', views.loginhandle, name='loginhandle'),
-    path('logout', views.logouthandle, name='logouthandle'),
-    #path('changepassword', views.changepassword, name='changepassword'),
+    path('', views.HomeView.as_view(), name='home-view'),
+
+    # uses template views directly in urls for rendering custom html template
+    # provides the signup and login form
+    path('signupform', TemplateView.as_view(template_name="signupform.html"), name='signupform'),
+    path('loginform', TemplateView.as_view(template_name="loginform.html"), name='loginform'),
+
+    # contact/search/login/sigup/logout/changepassword functionality
+    path('contact', views.ContactHandleView.as_view(), name='contact-handle-view'),
+    path('search', views.SearchHandleView.as_view(), name='search-handle-view'),
+    path('login', views.LoginHandleView.as_view(), name='login-handle-view'),
+    path('signup', views.SignupHandleView.as_view(), name='signup-handle-view'),
+    path('logout', views.LogoutHandleView.as_view(), name='logout-handle-view'),
+    path('changepassword', views.PasswordHandleView.as_view(), name='password-handle-view'),
 
 ]

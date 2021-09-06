@@ -10,67 +10,78 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous" />
 
+  <!-- Static JS for light/dark mode -->
+  <script src="/static/home.js"></script>
+
+  <!-- Static CSS -->
+  <link rel="stylesheet" type="text/css" href="/static/blogspot.css">
+  <!-- Static CSS for theme-->
+  <link id="stylesheet" rel="stylesheet" type="text/css" href="/static/light.css">
+
   <title>{% block title %} {% endblock title %}</title>
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="/">BlogSpot</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link {% block homeactive %}{% endblock homeactive %}" aria-current="page" href="/">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link {% block aboutactive %}{% endblock aboutactive %}" href="/about">About</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link {% block blogactive %}{% endblock blogactive %}" href="/blog">Blog</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link {% block contactactive %}{% endblock contactactive %}" href="/contact">Contact</a>
-          </li>
+  <div class="navbar-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" id="nav-mode">
+      <div class="container-fluid">
+        <a class="navbar-brand">BlogSpot</a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link {% block homeactive %}{% endblock homeactive %}" aria-current="page" href="/">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% block blogactive %}{% endblock blogactive %}" href="/blog">Blog</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% block contactactive %}{% endblock contactactive %}" href="/contact">Contact</a>
+            </li>
+            <!--Button for Light theme mode -->
+            <li class="nav-item">
+              <a class="nav-link" onclick="setStyleSheet('/static/light.css', 'navbar navbar-expand-lg navbar-light bg-light')" href="#lightmode">Light</a>
+            </li>
+            <!--Button for Dark theme mode -->
+            <li class="nav-item">
+              <a class="nav-link" onclick="setStyleSheet('/static/dark.css', 'navbar navbar-expand-lg navbar-dark bg-dark')" href="#darkmode">Dark</a>
+            </li>
+          </ul>
+          <form method="get" action="/search" class="d-flex">
+            <input name="searchquery" id="searchquery" class="form-control me-2" type="search" placeholder="Search"
+              aria-label="Search" />
+            <button class="btn btn-outline-primary mx-3" type="submit">
+              Search
+            </button>
+          </form>
 
-        </ul>
-        <form method="get" action="/search" class="d-flex">
-          <input name="searchquery" id="searchquery" class="form-control me-2" type="search" placeholder="Search"
-            aria-label="Search" />
-          <button class="btn btn-outline-primary mx-3" type="submit">
-            Search
-          </button>
-        </form>
-        <!--Remove login/signup button when logged in-->
-        {% if user.is_authenticated %}
-        <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle out" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
-              aria-expanded="false">
-              Welcome {{request.user}}
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" href="/logout">Logout</a></li>
-              <li><a class="dropdown-item" href="/changepassword">Change Password</a></li>
-            </ul>
-          </li>
-        </ul>
-        {% else %}
-        <!-- button to trigger login modal -->
-        <button type="submit" class="btn btn-primary m-1" data-bs-toggle="modal" data-bs-target="#loginModal">
-          Login
-        </button>
-        <!-- button to trigger signup modal -->
-        <button type="submit" class="btn btn-primary m-1" data-bs-toggle="modal" data-bs-target="#signupModal">
-          Sign Up
-        </button>
-        {% endif %}
+          <!--Remove login/signup button when logged in-->
+          {% if user.is_authenticated %}
+          <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle out" href="#" id="navbarDropdown" role="button"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                Welcome {{request.user}}
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                <li><a class="dropdown-item" href="/changepassword" role="button">Change Password</a></li>
+              </ul>
+            </li>
+          </ul>
+          {% else %}
+          <!-- login form -->
+          <a class="btn btn-primary m-1 {% block loginactive %}{% endblock loginactive %}" href="/loginform"
+            role="button">Login</a>
+
+          <!-- signup form -->
+          <a class="btn btn-primary m-1 {% block signupactive %}{% endblock signupactive %}" href="/signupform"
+            role="button">Sign Up</a>
+          {% endif %}
+        </div>
       </div>
-    </div>
-  </nav>
+    </nav>
+  </div>
+
   {% if messages %}
   {% for message in messages %}
   <div class="alert alert-{{ message.tags }} alert-dismissible fade show mb-0" role="alert">
@@ -82,128 +93,16 @@
   {% endfor %}
   {% endif %}
 
-
-  <!--signup modal -->
-  <div class="modal fade" id="signupModal" tabindex="-1" aria-labelledby="signupModal" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="signupModalTitle">Sign Up Here</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form action='/signup' method='post'>
-            {% csrf_token %}
-            <div class="mb-2">
-              <label for="username" class="form-label">User Name</label>
-              <input type="text" class="form-control" name="username" id="username" aria-describedby="username"
-                placeholder="Username should be Unique, Alphanumeric and Lowercase" required>
-            </div>
-            <div class="mb-2">
-              <label for="fname" class="form-label">First Name</label>
-              <input type="text" class="form-control" name="fname" id="fname" aria-describedby="fname"
-                placeholder="Enter First Name" required>
-            </div>
-            <div class="mb-2">
-              <label for="lname" class="form-label">Last Name</label>
-              <input type="text" class="form-control" name="lname" id="lname" aria-describedby="lname"
-                placeholder="Enter Last Name" required>
-            </div>
-            <div class="mb-2">
-              <label for="email" class="form-label">Email address</label>
-              <input name="email" type="email" class="form-control" id="email" aria-describedby="email"
-                placeholder="Enter your email address" required>
-            </div>
-            <div class="mb-2">
-              <label for="password1" class="form-label">Choose your Password</label>
-              <input name="password1" type="password" class="form-control" id="password1" placeholder="Enter password"
-                required>
-            </div>
-            <div class="mb-2">
-              <label for="password2" class="form-label">Confirm your Password</label>
-              <input name="password2" type="password" class="form-control" id="password2"
-                placeholder="Enter password again" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-          </form>
-        </div>
-        <div class="modal-footer">
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!--login modal -->
-  <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModal" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="loginModalTitle">Login Here</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form action='/login' method='post'>
-            {% csrf_token %}
-            <div class="mb-3">
-              <label for="loginusername" class="form-label">User Name</label>
-              <input type="text" class="form-control" name="loginusername" id="loginusername"
-                aria-describedby="loginusername" placeholder="Enter your Username" required>
-            </div>
-            <div class="mb-3">
-              <label for="loginpassword" class="form-label">Password</label>
-              <input name="loginpassword" type="password" class="form-control" id="loginpassword"
-                placeholder="Enter your password" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Login</button>
-          </form>
-        </div>
-        <div class="modal-footer">
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!--change password modal -->
-  <!--
-  <div class="modal fade" id="changepasswordModal" tabindex="-1" aria-labelledby="changepasswordModal" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="changepasswordModalTitle">Change Password</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form action='/changepassword' method='post'>
-            {% csrf_token %}
-            <div class="mb-3">
-              <label for="changepasswordusername" class="form-label">User Name</label>
-              <input type="text" class="form-control" name="changepasswordusername" id="changepasswordusername"
-                aria-describedby="changepasswordusername" placeholder="Enter your Username" required>
-            </div>
-            <div class="mb-3">
-              <label for="changepassword1" class="form-label">Enter New Password</label>
-              <input name="changepassword1" type="password" class="form-control" id="changepassword1"
-                placeholder="Enter new password" required>
-            </div>
-            <div class="mb-3">
-              <label for="changepassword2" class="form-label">Confirm New Password</label>
-              <input name="changepassword2" type="password" class="form-control" id="changepassword2"
-                placeholder="Confirm your password" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Confirm</button>
-          </form>
-        </div>
-        <div class="modal-footer">
-        </div>
-      </div>
-    </div>
-  </div>
-  -->
-  {% block body %} {% endblock body %}
+  {% block body %}<!--Custom BODY Here-->{% endblock body %}
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
-    crossorigin="anonymous"></script>
+    integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous">
+    </script>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+  <!-- Static JS for youtube api -->
+  <script src="/static/videoapi.js"></script>
 
 </body>
 

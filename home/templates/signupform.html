@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %} Sign Up {% endblock title %}
+{% block signupactive %} active {% endblock signupactive %}
+{% block body %}
+
+<!--signup form -->
+<div class="text-center">
+  <h3 >Sign Up Here</h3>
+</div>
+
+<div class="container">
+  <form action='/signup' method='post'>
+    {% csrf_token %}
+    <div class="form-group mb-2">
+      <label for="username" class="form-label"><b>User Name</b></label>
+      <input type="text" class="form-control" name="username" id="username" aria-describedby="username"
+        placeholder="Username should be Unique, Alphanumeric and Lowercase" required>
+    </div>
+    <div class="mb-2">
+      <label for="fname" class="form-label"><b>First Name</b></label>
+      <input type="text" class="form-control" name="fname" id="fname" aria-describedby="fname"
+        placeholder="Enter First Name" required>
+    </div>
+    <div class="mb-2">
+      <label for="lname" class="form-label"><b>Last Name</b></label>
+      <input type="text" class="form-control" name="lname" id="lname" aria-describedby="lname"
+        placeholder="Enter Last Name" required>
+    </div>
+    <div class="mb-2">
+      <label for="email" class="form-label"><b>Email address</b></label>
+      <input name="email" type="email" class="form-control" id="email" aria-describedby="email"
+        placeholder="Enter your email address" required>
+    </div>
+    <div class="mb-2">
+      <label for="password1" class="form-label"><b>Choose your Password</b></label>
+      <input name="password1" type="password" class="form-control" id="password1" placeholder="Enter password" required>
+    </div>
+    <div class="mb-2">
+      <label for="password2" class="form-label"><b>Confirm your Password</b></label>
+      <input name="password2" type="password" class="form-control" id="password2" placeholder="Enter password again"
+        required>
+    </div>
+    <div class="text-center p-2 m-2">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+  </form>
+</div>
+
+{% endblock body %}
