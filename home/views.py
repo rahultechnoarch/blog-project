@@ -1,7 +1,7 @@
 from django.shortcuts import render, HttpResponse, redirect, get_object_or_404
 from django.contrib import messages
-from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate, update_session_auth_hash
+from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy, reverse
@@ -9,7 +9,7 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import View, TemplateView, CreateView, UpdateView, DeleteView, DetailView
 # import all the models (from all apps)
 from home.models import Contact
-from blog.models import Post, BlogComment
+from blog.models import Post
 
 # class base template view for rendering custom html page (or use in urls direct)
 class HomeView(TemplateView):
@@ -17,7 +17,7 @@ class HomeView(TemplateView):
 
 class ContactHandleView(View):
     def get(self, request):
-        return render(request, 'home/contact.html')
+        return render(request, 'contactform.html')
     
     def post(self, request):
     # get all contact form parameters
@@ -31,7 +31,7 @@ class ContactHandleView(View):
             contact= Contact(name=name, email=email, phone=phone, content=content)
             contact.save()
             messages.success(request, "Your message has been sent.")
-            return render(request, 'home/contact.html')
+            return redirect('home-view')
 
 #APIs
 # search through all posts using title, content

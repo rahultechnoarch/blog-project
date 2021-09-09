@@ -1,17 +1,13 @@
 from collections import namedtuple
 from django.shortcuts import redirect, render, HttpResponse, get_object_or_404
 from django.contrib import messages
-from django.urls import reverse_lazy, reverse
+from django.http import JsonResponse, Http404
 # import important views
-from django.views.generic.list import ListView
-from django.views.generic import View, TemplateView, CreateView, UpdateView, DeleteView, DetailView
+from django.views.generic import View, CreateView, ListView, TemplateView, UpdateView, DeleteView, DetailView
 # import all the models (from all apps)
 from blog.models import Post, BlogComment
 from blog.forms import PostForm
 
-def related(request):
-    return render(request, 'home/relatedvideos.html')
-    
 # views start from here
 class PostCreateView(CreateView):
     model = Post
@@ -34,7 +30,7 @@ class PostListView(ListView):
 
 # Post Blog
 class BlogPostView(View):
-    def post(self, request):
+    def post(self):
         pass
 
     def get(self, request, slug):
@@ -53,40 +49,27 @@ class BlogPostView(View):
             else:
                 replyDict[reply.parent.sno].append(reply)
         context = {'post': post, 'comments': comments, 'user': request.user, 'replyDict': replyDict}
-        return render(request, 'blog/blogPost.html', context)
+        return render(request, 'blog/blogPost1.html', context)
 
 # Post comment
 class PostCommentView(View):
     def post(self, request):
-        comment = request.POST.get("comment")
         user = request.user
-        postSno = request.POST.get("postSno")
-        post = Post.objects.get(sno=postSno)
-        parentSno = request.POST.get("parentSno")
-        if parentSno == "":
-            comment = BlogComment(comment=comment, user=user, post=post)
-            comment.save()
-            messages.success(request, "Comment posted successfully")
-        else:
-            parent = BlogComment.objects.get(sno=parentSno)
-            comment = BlogComment(comment=comment, user=user, post=post, parent=parent)
-            comment.save()
-            messages.success(request, "Reply posted successfully")
-        return redirect(f"/blog/{post.slug}")
-        
-    def get(self, request, slug):
-        postSno = request.POST.get("postSno")
-        post = Post.objects.get(sno=postSno)
-        return redirect(f"/blog/{post.slug}")
-
-
-
-#class PostUpdate(UpdateView):
-#    model = Post
-#   fields = ['tile', 'author', 'content']
-#   success_url = reverse_lazy('posts')
-
-#class PostDeleteView(DeleteView):
-#    model = Post
-#    context_object_name = 'allPosts'
-#    success_url = reverse_lazy('blog/blogPost.html')
+        comment = request.POST.get("comment")
+        postSno = request.POST.get("postsno")
+        parentSno = request.POST.get("parentsno")
+        try:
+            post = Post.objects.get(sno=postSno)
+            if parentSno == "":
+                comment = BlogComment(comment=comment, user=user, post=post)
+                comment.save()
+                messages.success(request, "Comment posted successfully")
+            else:
+                parent = BlogComment.objects.filter(sno=parentSno).last()
+                comment = BlogComment(comment=comment, user=user, post=post, parent=parent)
+                comment.save()
+                messages.success(request, "Reply posted successfully")
+        except Post.DoesNotExist:
+            return HttpResponse("Post does not exist")
+        return JsonResponse({'bool':True})
+        #return redirect(f"/blog/{post.slug}")

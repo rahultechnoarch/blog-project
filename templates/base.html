@@ -1,6 +1,8 @@
+{% load humanize %}
+{% load extras %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <!-- Required meta tags -->
   <meta charset="utf-8" />
@@ -9,6 +11,8 @@
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous" />
+  <!-- Animate CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
   <!-- Static JS for light/dark mode -->
   <script src="/static/home.js"></script>
@@ -35,21 +39,21 @@
               <a class="nav-link {% block blogactive %}{% endblock blogactive %}" href="/blog">Blog</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link {% block contactactive %}{% endblock contactactive %}" href="/contact">Contact</a>
+              <a class="nav-link {% block contactactive %}{% endblock contactactive %}" href="/contactform">Contact</a>
             </li>
             <!--Button for Light theme mode -->
             <li class="nav-item">
-              <a class="nav-link" onclick="setStyleSheet('/static/light.css', 'navbar navbar-expand-lg navbar-light bg-light')" href="#lightmode">Light</a>
+              <a class="nav-link" onclick="setStyleSheet('/static/light.css', 'navbar navbar-expand-lg navbar-light bg-light', 'light')" href="#lightmode">Light</a>
             </li>
             <!--Button for Dark theme mode -->
             <li class="nav-item">
-              <a class="nav-link" onclick="setStyleSheet('/static/dark.css', 'navbar navbar-expand-lg navbar-dark bg-dark')" href="#darkmode">Dark</a>
+              <a class="nav-link" onclick="setStyleSheet('/static/dark.css', 'navbar navbar-expand-lg navbar-dark bg-dark', 'dark')" href="#darkmode">Dark</a>
             </li>
           </ul>
           <form method="get" action="/search" class="d-flex">
             <input name="searchquery" id="searchquery" class="form-control me-2" type="search" placeholder="Search"
               aria-label="Search" />
-            <button class="btn btn-outline-primary mx-3" type="submit">
+            <button class="btn btn-primary mx-3" type="submit">
               Search
             </button>
           </form>
@@ -97,13 +101,65 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous">
-    </script>
+  </script>
 
+  <!-- JS CDN -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
   <!-- Static JS for youtube api -->
   <script src="/static/videoapi.js"></script>
 
-</body>
+  <!-- Ajax Code for comment api START -->
+  <script>
+    $(document).ready(function(){
+      $("#postcomment").on('click',function(){
+        var comment=$("#commenttext").val()
+        var postsno=$("#postSno").val()
+        console.log(comment, postsno)
 
+        //Ajax
+        $.ajax({
+          url:"{% url 'post-comment-view' %}",
+          type:"post",
+          data:{
+              'csrfmiddlewaretoken': '{{ csrf_token }}',
+              'comment': comment,
+              'postsno': postsno,
+          },
+          dataType:'json',
+          beforeSend:function(){
+              $("#postcomment").addClass('disabled').text('Commenting')
+          },
+          success:function(res){
+            if(res.bool==true){
+              $("#commenttext").val('')
+
+              //Append Element
+              var html='<div class="card my-3 animate__animated animate__bounce">\
+                <div class="card-body">\
+                <b>{{request.user }} </b><span class="badge bg-secondary">now</span>\
+                <div>'+comment+'</div>\
+                </div>\
+                </div>'
+              $(".comment-wrapper").append(html)
+            }
+            $("#postcomment").removeClass('disabled').text('Comment')
+          }
+        })
+      })
+    })
+  </script>
+  <!-- Ajax Code for comment api END -->
+{% comment %} <script>
+  window.onLoad=function(){
+    var modename = localStorage.getItem('stylemode')
+      if(modename=='light'){
+        setStyleSheet('/static/light.css', 'navbar navbar-expand-lg navbar-light bg-light', 'light')
+      }
+      else{
+        setStyleSheet('/static/dark.css', 'navbar navbar-expand-lg navbar-dark bg-dark', 'dark')
+      }
+  }
+</script> {% endcomment %}
+
+</body>
 </html>

@@ -4,7 +4,6 @@ from blog.models import Post
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit
 
-
 #create your forms here
 
 class PostForm(ModelForm):
@@ -23,5 +22,5 @@ class PostForm(ModelForm):
             'author',
             'views',
             'slug',
-            Submit('submit', 'Submit', css_class='btn btn-sucess m-2 p-2')
+            Submit('submit', 'Submit', css_class='btn btn-sucess mt-3 p-2')
         )

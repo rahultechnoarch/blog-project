@@ -1,4 +1,4 @@
-:not(navbar-container) {
+*{
     background-color: #1F1B24;
     color: #F8F8F6;
 }

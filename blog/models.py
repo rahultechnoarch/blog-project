@@ -1,13 +1,9 @@
 from django.contrib.auth.models import User
 from django.db import models
-from django.db.models import constraints
 from django.db.models.deletion import CASCADE
 from django.utils.timezone import now
-from django.db.models.fields.related import ForeignKey
 from ckeditor.fields import RichTextField
-from django.db.models import UniqueConstraint
 # Create your models here.
-
 
 # Post model, creates a post with title, content, author, time (view count and slug)
 class Post(models.Model):
@@ -28,7 +24,7 @@ class BlogComment(models.Model):
     comment = RichTextField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
     timeStamp = models.DateTimeField(default=now)
 
     def __str__(self):

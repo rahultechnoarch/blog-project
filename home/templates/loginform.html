@@ -4,28 +4,29 @@
 {% block loginactive %} active {% endblock loginactive %}
 {% block body %}
 
-<!--login form -->
-<div class="text-center">
-  <h3>Sign Up Here</h3>
-</div>
+<!--START login form -->
+<div class="row">
+  <div class="col-sm-4">
+  </div>
+  <div class="col-sm-4">
+    <div class="card mt-5 p-1">
+      <div class="card-header text-center">
+        <b><h4>Sign In Here</h4></b>
+      </div>
+      <div class="card-body">
+        <form action='/login' method='post'>
+          {% csrf_token %}
+          <h5 class="card-title">User Name</h5>
+          <input type="text" class="form-control" name="loginusername" id="loginusername" aria-describedby="loginusername" required>
+          <h5 class="card-title mt-1">Password</h5>
+          <input name="loginpassword" type="password" class="form-control" id="loginpassword" required>
+          <div class="text-center"><button type="submit" class="btn btn-primary mt-3">Submit</button></div>
 
-<div class="container">
-  <form action='/login' method='post'>
-    {% csrf_token %}
-    <div class="mb-3">
-      <label for="loginusername" class="form-label"><b>User Name</b></label>
-      <input type="text" class="form-control" name="loginusername" id="loginusername" aria-describedby="loginusername"
-        placeholder="Enter your Username" required>
+        </form>
+      </div>
     </div>
-    <div class="mb-3">
-      <label for="loginpassword" class="form-label"><b>Password</b></label>
-      <input name="loginpassword" type="password" class="form-control" id="loginpassword"
-        placeholder="Enter your password" required>
-    </div>
-    <div class="text-center p-2 m-2">
-      <button type="submit" class="btn btn-primary">Submit</button>
-    </div>
-  </form>
+  </div>  
 </div>
+<!--END login form -->
 
 {% endblock body %}
